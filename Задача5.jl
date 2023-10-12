@@ -1,3 +1,4 @@
+# Функция quicksort выполняет сортировку массива методом быстрой сортировки (quicksort).
 function quicksort(array)
     if length(array) <= 1
         return array
@@ -9,19 +10,23 @@ function quicksort(array)
     return vcat(quicksort(left), middle, quicksort(right))
 end
 
+# Вывод отсортированного массива.
 println(quicksort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]))
 
+# Функция sortperm выполняет сортировку индексов элементов массива arr в порядке возрастания значений.
 function sortperm(arr)
     indices = Array(1:length(arr))
     sort!(indices, by = i -> arr[i])
     return indices
 end
 
+# Пример использования sortperm.
 arr = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
 sorted_indices = sortperm(arr)
 println(sorted_indices)
 println(arr[sorted_indices])
 
+# Функция bubble_sort! выполняет сортировку массива методом сортировки пузырьком (bubble sort).
 function bubble_sort!(arr)
     n = length(arr)
     for i in 1:n-1
@@ -34,6 +39,7 @@ function bubble_sort!(arr)
     return arr
 end
 
+# Функция comb_sort! выполняет сортировку массива методом сортировки расческой (comb sort).
 function comb_sort!(a; factor=1.2473309)
     step = length(a)
     while step >= 1
@@ -47,6 +53,7 @@ function comb_sort!(a; factor=1.2473309)
     bubble_sort!(a)
 end
 
+# Функция shell_sort выполняет сортировку массива методом сортировки Шелла (shell sort).
 function shell_sort(arr)
     n = length(arr)
     gap = div(n, 2)
@@ -65,44 +72,22 @@ function shell_sort(arr)
     return arr
 end
 
-using Statistics
-using Random
-
-
-function shell_sort(arr)
-    n = length(arr)
-    gap = div(n, 2)
-    while gap > 0
-        for i in (gap+1):n
-            temp = arr[i]
-            j = i
-            while j > gap && arr[j-gap] > temp
-                arr[j] = arr[j-gap]
-                j -= gap
-            end
-            arr[j] = temp
-        end
-        gap = div(gap, 2)
-    end
-    return arr
-end
-
-
+# Функция time_shell_sort измеряет время выполнения сортировки Шелла.
 function time_shell_sort(arr)
     return @elapsed shell_sort(arr)
 end
 
-
+# Функция time_insertion_sort измеряет время выполнения сортировки вставкой.
 function time_insertion_sort(arr)
     return @elapsed sort(arr)
 end
 
-
+# Функция random_array создает случайный массив длины n.
 function random_array(n)
     return rand(n)
 end
 
-
+# Функция time_for_sizes измеряет время выполнения сортировок для разных размеров массивов.
 function time_for_sizes(sizes)
     shell_times = []
     insertion_times = []
@@ -114,15 +99,21 @@ function time_for_sizes(sizes)
     return (shell_times, insertion_times)
 end
 
+# Задание размеров массивов для измерения времени сортировки.
 sizes = [10^i for i in 1:6]
+
+# Измерение времени для сортировки Шелла и сортировки вставкой.
 shell_times, insertion_times = time_for_sizes(sizes)
 
+# Вывод результатов измерений.
 println("Shell sort times: ", shell_times)
 println("Insertion sort times: ", insertion_times)
 
+# Вывод среднего времени выполнения сортировки.
 println("Shell sort time mean: ", mean(shell_times))
-println("Insertion sort time mean: ", mean(insertion_times))
+println("Insertion sort time mean: ", mean(insertion_times)
 
+# Функция merge! выполняет слияние двух массивов в один.
 function Base.merge!(a1, a2, a3)::Nothing
     i1, i2, i3 = 1, 1, 1
     @inbounds while i1 <= length(a1) && i2 <= length(a2)
@@ -143,12 +134,13 @@ function Base.merge!(a1, a2, a3)::Nothing
     nothing
 end
 
+# Функция merge_sort! выполняет сортировку массива методом слияния (merge sort).
 function merge_sort!(a)
-    b = similar(a) 
+    b = similar(a)
     N = length(a)
-    n = 1 
+    n = 1
     while n < N
-        K = div(N,2n) 
+            K = div(N, 2n)
         for k in 0:K-1
             merge!(@view(a[(1:n).+k*2n]), @view(a[(n+1:2n).+k*2n]), @view(b[(1:2n).+k*2n]))
         end
@@ -161,12 +153,13 @@ function merge_sort!(a)
         n *= 2
     end
     if isodd(log2(n))
-        b .= a 
+        b .= a
         a = b
     end
     return a
 end
 
+# Функция part_sort! выполняет часть сортировки для быстрой сортировки.
 function part_sort!(A, b)
     N = length(A)
     K, L, M = 0, 0, N
@@ -177,13 +170,15 @@ function part_sort!(A, b)
             A[L+1], A[M] = A[M], A[L+1]
             M -= 1
         else
-            L += 1; K += 1
+            L += 1
+            K += 1
             A[L], A[K] = A[K], A[L]
         end
     end
     return @view(A[1:K]), @view(A[M+1:N])
 end
 
+# Функция quick_sort! выполняет быструю сортировку.
 function quick_sort!(A)
     length(A) <= 1 && return A
     N = length(A)
@@ -193,40 +188,29 @@ function quick_sort!(A)
     return A
 end
 
+# Функция median вычисляет медиану из элементов массива A.
 function median(A::AbstractVector{T} where T<:Integer)
-    if length(A)%2==0
-        return order_statistics!(A, length(A)/2)
+    if length(A) % 2 == 0
+        return order_statistics!(A, length(A) / 2)
     else
-        return (order_statistics!(A, length(A)/2)+order_statistics!(A, length(A)/2+1))/2
+        return (order_statistics!(A, length(A) / 2) + order_statistics!(A, length(A) / 2 + 1)) / 2
     end
 end
 
 using Random
- 
+
+# Создаем случайный массив A.
 A = randperm(100000)[1:100000]
- 
+
+# Измеряем время выполнения различных сортировок и выводим результаты.
 @showtime bubble_sort!(A)
 @showtime comb_sort!(A)
 @showtime shell_sort(A)
 @showtime merge_sort!(A)
 @showtime quick_sort!(A)
- 
-#= top sorts
-bubble_sort(A): 9.740503 seconds (21.70 k allocations: 1.927 MiB, 0.14% compilation time)
-insert_sort(A): 1.242766 seconds (7.11 k allocations: 1.119 MiB, 0.82% gc time, 1.25% compilation time)
-comb_sort(A): 0.023961 seconds (20.77 k allocations: 1.875 MiB, 68.58% compilation time)
-shell_sort(A): 0.108704 seconds (124.69 k allocations: 7.244 MiB, 43.83% compilation time)
-merge_sort(A): 0.262546 seconds (831.54 k allocations: 38.854 MiB, 97.07% compilation time)
-quick_sort(A): 0.083688 seconds (375.24 k allocations: 18.645 MiB, 14.96% gc time, 89.28% compilation time)
-=#
- 
-@showtime sort(A,alg=InsertionSort)
-@showtime sort(A,alg=QuickSort)
-@showtime sort(A,alg=MergeSort)
- 
-#= lib sorts
-sort(A, alg = InsertionSort): 1.206621 seconds (63.45 k allocations: 4.079 MiB, 2.13% compilation time)
-sort(A, alg = QuickSort): 0.017171 seconds (15.88 k allocations: 1.670 MiB, 73.98% compilation time)
-sort(A, alg = MergeSort): 0.051416 seconds (155.36 k allocations: 8.990 MiB, 89.43% compilation time)
-=#
+
+# Измеряем время выполнения стандартных сортировок.
+@showtime sort(A, alg=InsertionSort)
+@showtime sort(A, alg=QuickSort)
+@showtime sort(A, alg=MergeSort)
 
