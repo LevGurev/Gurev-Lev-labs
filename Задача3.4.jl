@@ -1,9 +1,21 @@
+# Функция meanstd для вычисления среднего значения и стандартного отклонения элементов массива aaa.
 function meanstd(aaa)
-    T = eltype(aaa)
-    n = 0; s_first = zero(T); s_second = zero(T)
+    T = eltype(aaa)  # Определение типа элементов в массиве aaa.
+    n = 0
+    s_first = zero(T)  # Инициализация переменной для суммы элементов.
+    s_second = zero(T)  # Инициализация переменной для суммы квадратов элементов.
+
+    # Проходим по элементам массива и вычисляем сумму и сумму квадратов элементов.
     for a in aaa
-        n += 1; s_first += a; s_second += a*a
+        n += 1
+        s_first += a
+        s_second += a * a
     end
-    mean = s_first/n
-    return mean, sqrt(s_second/n - mean*mean)
+
+    mean = s_first / n  # Вычисляем среднее значение.
+    
+    # Вычисляем стандартное отклонение, используя формулу: sqrt(s2 - mean^2), где s2 - среднее квадратов элементов.
+    std_deviation = sqrt(s_second / n - mean * mean)
+    
+    return mean, std_deviation  # Возвращаем среднее значение и стандартное отклонение.
 end
